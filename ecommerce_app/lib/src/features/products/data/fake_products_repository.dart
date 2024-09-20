@@ -36,13 +36,13 @@ final productsRepositoryProvider = Provider<FakeProductsRepository>((ref) {
 });
 
 
-final productsListStreamProvider = StreamProvider<List<Product>>((ref) {
+final productsListStreamProvider = StreamProvider.autoDispose<List<Product>>((ref) {
   // we can use the ref object wheather or not we are inside a widget or provider
   final productRepository = ref.watch(productsRepositoryProvider);
   return productRepository.watchProductsList();
 });
 
-final productsListFutureProvider = FutureProvider<List<Product>>((ref) {
+final productsListFutureProvider = FutureProvider.autoDispose<List<Product>>((ref) {
   // we can use the ref object wheather or not we are inside a widget or provider
   final productRepository = ref.watch(productsRepositoryProvider);
   return productRepository.fetchProductsList();
@@ -50,7 +50,7 @@ final productsListFutureProvider = FutureProvider<List<Product>>((ref) {
 
 // the "String" is the type of the argument
 // family provider is used when we need to pass an dynamic argument to a provider
- final productProvider = StreamProvider.family<Product?, String>((ref, id)  {
+ final productProvider = StreamProvider.autoDispose.family<Product?, String>((ref, id)  {
    final productRepository = ref.watch(productsRepositoryProvider);
   return productRepository.watchProduct(id);
 });
