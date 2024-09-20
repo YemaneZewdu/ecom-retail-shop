@@ -15,7 +15,9 @@ class FakeProductsRepository {
     return _products.firstWhere((product) => product.id == id);
   }
 
-  Future<List<Product>> fetchProductsList() {
+  Future<List<Product>> fetchProductsList() async {
+    // fake delay to get the loading state
+    await Future.delayed(const Duration(seconds: 2));
     return Future.value(_products);
   }
 
@@ -44,4 +46,11 @@ final productsListFutureProvider = FutureProvider<List<Product>>((ref) {
   // we can use the ref object wheather or not we are inside a widget or provider
   final productRepository = ref.watch(productsRepositoryProvider);
   return productRepository.fetchProductsList();
+});
+
+// the "String" is the type of the argument
+// family provider is used when we need to pass an dynamic argument to a provider
+ final productProvider = StreamProvider.family<Product?, String>((ref, id)  {
+   final productRepository = ref.watch(productsRepositoryProvider);
+  return productRepository.watchProduct(id);
 });
