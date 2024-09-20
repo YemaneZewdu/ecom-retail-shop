@@ -32,3 +32,16 @@ class FakeProductsRepository {
 final productsRepositoryProvider = Provider<FakeProductsRepository>((ref) {
   return FakeProductsRepository();
 });
+
+
+final productsListStreamProvider = StreamProvider<List<Product>>((ref) {
+  // we can use the ref object wheather or not we are inside a widget or provider
+  final productRepository = ref.watch(productsRepositoryProvider);
+  return productRepository.watchProductsList();
+});
+
+final productsListFutureProvider = FutureProvider<List<Product>>((ref) {
+  // we can use the ref object wheather or not we are inside a widget or provider
+  final productRepository = ref.watch(productsRepositoryProvider);
+  return productRepository.fetchProductsList();
+});

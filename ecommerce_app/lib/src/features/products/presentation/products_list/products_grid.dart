@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:ecommerce_app/src/common_widgets/error_message_widget.dart';
 import 'package:ecommerce_app/src/features/products/data/fake_products_repository.dart';
 import 'package:ecommerce_app/src/features/products/presentation/products_list/product_card.dart';
 import 'package:ecommerce_app/src/localization/string_hardcoded.dart';
@@ -17,10 +18,10 @@ class ProductsGrid extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Read from data source
-    final productsRepository = ref.watch(productsRepositoryProvider);
+    final productsListValue = ref.watch(productsListFutureProvider);
 
-    final products = productsRepository.getProductsList();
-    return products.isEmpty
+    return productsListValue.when(
+      data: (products)=>  products.isEmpty
         ? Center(
             child: Text(
               'No products found'.hardcoded,
@@ -39,7 +40,11 @@ class ProductsGrid extends ConsumerWidget {
                 ),
               );
             },
-          );
+          ),
+      error: (error, stackTrace) => Center(child: ErrorMessageWidget(error.toString())),
+      loading: ()=> const Center(child: CircularProgressIndicator()),);
+  
+    
   }
 }
 
