@@ -16,6 +16,16 @@ class AccountScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // this will show the alert dialog window
+    ref.listen<AsyncValue<void>>(
+      accountScreenControllerProvider, 
+      (previousState,state){
+
+       if (!state.isLoading && state.hasError) {
+        showExceptionAlertDialog(context: context, title: "Error".hardcoded, exception: state.error);
+       }
+      }
+      );
     final state = ref.watch(accountScreenControllerProvider);
 
     return Scaffold(
@@ -45,6 +55,8 @@ class AccountScreen extends ConsumerWidget {
                       // but here we are in a onPressed callback, whose purpose is
                       // to do sth
                       await ref
+                      // used .notifier because without that accountScreenControllerProvider
+                      // will just give us the state class itself not the state notifier
                           .read(accountScreenControllerProvider.notifier)
                           .signOut();
                       goRouter.pop();
