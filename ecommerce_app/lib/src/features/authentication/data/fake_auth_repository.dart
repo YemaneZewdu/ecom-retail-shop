@@ -11,42 +11,44 @@ class FakeAuthRepository {
 
   Stream<AppUser?> authStateChanges() => _authState.stream;
   AppUser? get currentUser => _authState.value;
- 
+
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     if (currentUser == null) {
       _createNewUser(email);
     }
   }
- 
+
   Future<void> createUserWithEmailAndPassword(
       String email, String password) async {
     if (currentUser == null) {
       _createNewUser(email);
     }
   }
- 
+
   Future<void> signOut() async {
+    // await Future.delayed(const Duration(seconds: 3));
+    // throw Exception('Connection Failed');
     _authState.value = null;
   }
- 
+
   void _createNewUser(String email) {
     // note: the uid could be any unique string. Here we simply reverse the email.
     _authState.value =
         AppUser(uid: email.split('').reversed.join(), email: email);
   }
- 
- // just creating this method is not enough so we have to use it 
- //below in the authRepositoryProvider
+
+  // just creating this method is not enough so we have to use it
+  //below in the authRepositoryProvider
   void dispose() => _authState.close();
 }
- 
- // Provider to access the repository
+
+// Provider to access the repository
 final authRepositoryProvider = Provider<FakeAuthRepository>((ref) {
   final auth = FakeAuthRepository();
   ref.onDispose(() => auth.dispose());
   return auth;
 });
- 
+
 final authStateChangesProvider = StreamProvider.autoDispose<AppUser?>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   return authRepository.authStateChanges();
