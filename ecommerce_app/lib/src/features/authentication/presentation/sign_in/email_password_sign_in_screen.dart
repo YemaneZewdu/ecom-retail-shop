@@ -121,9 +121,11 @@ class _EmailPasswordSignInContentsState
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<EmailPasswordSignInState>(
-      emailPasswordSignInControllerProvider(widget.formType),
-      (_, state)=> state.value.showAlertDialogOnError(context));
+    /// .select() will give us option to partially listen to a provider 
+    /// inside ref.listen  or ref.watch
+    ref.listen<AsyncValue>(
+      emailPasswordSignInControllerProvider(widget.formType).select((state)=> state.value),
+      (_, state) => state.value.showAlertDialogOnError(context));
     final state = ref
     .watch(emailPasswordSignInControllerProvider(widget.formType));
     return ResponsiveScrollableCard(
