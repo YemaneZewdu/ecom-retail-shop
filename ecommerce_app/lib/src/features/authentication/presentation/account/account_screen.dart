@@ -38,7 +38,7 @@ class AccountScreen extends ConsumerWidget {
                     // * Get the navigator beforehand to prevent this warning:
                     // * Don't use 'BuildContext's across async gaps.
                     // * More info here: https://youtu.be/bzWaMpD1LHY
-                    final goRouter = GoRouter.of(context);
+                   // final goRouter = GoRouter.of(context);
                     final logout = await showAlertDialog(
                       context: context,
                       title: 'Are you sure?'.hardcoded,
@@ -50,14 +50,14 @@ class AccountScreen extends ConsumerWidget {
                       // and rebuild the widget based on that
                       // but here we are in a onPressed callback, whose purpose is
                       // to do sth
-                      final success = await ref
+                       ref
                           // used .notifier because without that accountScreenControllerProvider
                           // will just give us the state class itself not the state notifier
                           .read(accountScreenControllerProvider.notifier)
                           .signOut();
-                      if (success) {
-                        goRouter.pop();
-                      }
+                      // if (success) {
+                      //   goRouter.pop();
+                      // }
                     }
                   },
           ),
